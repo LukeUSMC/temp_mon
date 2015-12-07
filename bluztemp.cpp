@@ -11,7 +11,7 @@ DS18B20 ds18b20 = DS18B20(D2);
 void dht_wrapper();
 PietteTech_DHT DHT(DHTPIN, DHTTYPE, dht_wrapper);
 
-
+bool firstPass = true;
 char szInfo[75];
 char status[64];
 byte dsAddr;
@@ -91,8 +91,17 @@ void publishData(){
 }
 
 void getwatertemp(){
+  if(firstPass){
+    ds18b20.setResolution(9);
+    firstPass = false;
+  }
   if(!ds18b20.search()){
     ds18b20.resetsearch();
+    Serial1.print("Power Supply mode is: ");
+    if(ds18b20.readPowerSupply()){
+      Serial1.println("Parasite.");
+    }
+    else {Serial1.println("NOT Parasite.");}
     celsius = ds18b20.getTemperature();
     Serial1.print("Temp returned is: ");
     Serial1.println(celsius);
@@ -113,7 +122,9 @@ void getwatertemp(){
     Serial1.print("Fahrenheit returned is: ");
     Serial1.println(fahrenheit);
     int totalAttempts = successAttempts + failedAttempts;
-    float prcnt = successAttempts/totalAttempts * 100;
+    Serial1.print("Successful Temp Reading at: ");
+    int percentage = ((float)successAttempts /  (float)totalAttempts) * 100.0;
+    Serial1.println(percentage);
   }
 
 }

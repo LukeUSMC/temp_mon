@@ -91,6 +91,38 @@ float DS18B20::convertToFahrenheit(float celsius){
     return celsius * 1.8 + 32.0;
 }
 
+void DS18B20::setResolution(uint8_t newResolution){
+  ds->reset();
+  ds->select(addr);
+  switch (newResolution){
+  case 12:
+      ds->write(TEMP_12_BIT);
+      break;
+  case 11:
+      ds->write(TEMP_11_BIT);
+      break;
+  case 10:
+      ds->write(TEMP_10_BIT);
+      break;
+  case 9:
+  default:
+      ds->write(TEMP_9_BIT);
+      break;
+  }
+  HAL_Delay_Milliseconds(20);
+  ds->reset();
+}
+
+bool DS18B20::readPowerSupply(){
+    bool ret = false;
+    ds->reset();
+    ds->select(addr);
+    ds->write(READPOWERSUPPLY);
+    if (ds->read_bit() == 0) ret = true;
+    ds->reset();
+    return ret;
+}
+
 bool DS18B20::crcCheck(){
     if (_dataCRC != _readCRC) {
       Serial1.print("Data CRC is: ");

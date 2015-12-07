@@ -1,1 +1,3 @@
-adalink nrf51822 --programmer stlink --wipe --program-hex ../bluzDK-firmware/build/target/main/platform-103/temp_mon.hex --program-hex ../bluzDK-firmware/platform/MCU/NRF51/NRF51_StdPeriph_Driver/inc/softdevice/s110/hex/s110_softdevice.hex 
+adalink nrf51822 --programmer stlink --wipe --program-hex ../bluzDK-firmware/build/target/main/platform-103/temp_mon.hex --program-hex ../bluzDK-firmware/platform/MCU/NRF51/NRF51_StdPeriph_Driver/inc/softdevice/s110/hex/s110_softdevice.hex
+
+make clean all PLATFORM=bluz PARTICLE_DEVELOP=1 APP=temp_mon
